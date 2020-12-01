@@ -15,7 +15,7 @@ class IssueCommentCommand:
     """
     A command that has been parsed out of a GitHub issue comment.
 
-    E.g., `@bors r+` => an issue command with action == 'approve'
+    E.g., `@bors 🎄+` => an issue command with action == 'approve'
     """
 
     def __init__(self, action):
@@ -177,23 +177,23 @@ def parse_issue_comment(username, body, sha, botname, hooks=[]):
         if word == '@' + botname + ':':
             continue
 
-        if word == 'r+' or word.startswith('r='):
+        if word == '🎄+' or word.startswith('🎄='):
             approved_sha = sha
 
             if i + 1 < len(words) and is_sha(words[i + 1]):
                 approved_sha = words[i + 1]
                 words[i + 1] = None
 
-            approver = word[len('r='):] if word.startswith('r=') else username
+            approver = word[len('🎄='):] if word.startswith('🎄=') else username
 
-            # Ignore "r=me"
+            # Ignore "🎄=me"
             if approver == 'me':
                 continue
 
             commands.append(
                     IssueCommentCommand.approve(approver, approved_sha))
 
-        elif word == 'r-':
+        elif word == '🎄-':
             commands.append(IssueCommentCommand.unapprove())
 
         elif word.startswith('p='):
